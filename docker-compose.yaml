@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: form-ai:latest
+    container_name: form-ai-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./:/srv/app
+    networks:
+      - formai
+
+  db:
+    image: mysql:5.7
+    container_name: form-ai-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: form_ai
+      MYSQL_USER: form_ai
+      MYSQL_PASSWORD: form_ai
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - formai
+
+  caddy:
+    image: caddy:2.7-alpine
+    container_name: caddy
+    depends_on:
+      - app
+    restart: unless-stopped
+    ports:
+      - "8383:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./public:/srv/app/public:ro
+    networks:
+      - formai
+
+volumes:
+  dbdata:
+
+networks:
+  formai:
+    driver: bridge
