@@ -1,5 +1,8 @@
 <?php
 session_start();
+$name = isset($_SESSION['name']) ? htmlspecialchars($_SESSION['name']) : '';
+$rec = isset($_SESSION['rec']) ? htmlspecialchars($_SESSION['rec']) : '';
+$response = isset($_SESSION['response']) ? htmlspecialchars($_SESSION['response']) : '';
 ?>
 <!doctype html>
 <html lang="en">
@@ -16,23 +19,25 @@ session_start();
     <ul>
         <li>
             <label for="name">Ваше ім'я</label>
-            <input type="text" id="name" name="name" placeholder="Віка" required>
+            <input type="text"
+                   id="name"
+                   name="name"
+                   placeholder="Віка" required
+                   value="<?php echo $name; ?>">
         </li>
         <li>
             <label for="rec">Пошук рецепту за інгредієнтом:</label>
-            <input type="text" id="rec" name="rec" placeholder="Перець солодкий">
+            <input type="text"
+                   id="rec"
+                   name="rec"
+                   placeholder="Перець солодкий"
+                   value="<?php echo $rec; ?>">
         </li>
     </ul>
     <input type="submit" value="Submit">
 </form>
 <div class="response">
-    <?php
-    if (isset($_SESSION['name'], $_SESSION['response'])) {
-        echo "<p>Welcome, ".$_SESSION['name']."!</p>";
-        echo "<p>".$_SESSION['response']."</p>";
-        unset($_SESSION['name'], $_SESSION['response']);
-    }
-    ?>
+    <p><?php echo $response; ?></p>
 </div>
 </body>
 </html>
